@@ -25,7 +25,7 @@ editoria gerar meu-romance --somente tudo
 
 `gerar` escreve somente dentro de `dist/` do projeto: `dist/revisao/` para leitura privada, `dist/publico/` para o site e `dist/kdp/` para EPUB e miolo PDF. `dist/` fica fora do Git por padrão. A pasta pública contém **apenas a landing page** até que você configure uma prévia; o livro completo nunca é enviado ao site por padrão. Consulte [PUBLICACAO.md](docs/PUBLICACAO.md) antes de expor capítulos ou entrar em programas de exclusividade digital.
 
-Para colocar a apresentação ou a prévia no GitHub Pages, siga [GITHUB_PAGES.md](docs/GITHUB_PAGES.md). Há um [workflow de exemplo](exemplos/pages.yml) para o repositório de cada livro; este repositório é a ferramenta e não hospeda um livro.
+Para colocar a apresentação ou a prévia no GitHub Pages, siga [GITHUB_PAGES.md](docs/GITHUB_PAGES.md). Em livros com leitura pública autorizada, o [leitor instalável](docs/LEITOR_PWA.md) abre no ponto salvo sem guardar o livro inteiro offline. Há um [workflow de exemplo](exemplos/pages.yml) para o repositório de cada livro; este repositório é a ferramenta e não hospeda um livro.
 
 ## Como o fluxo funciona
 
@@ -49,7 +49,7 @@ As [métricas editoriais](docs/METRICAS.md) explicam exatamente o que as contage
 meu-romance/
   livro.json                 metadados, público, site e artes
   planejamento/              premissa, personagens, cronologia, mapa
-  manuscrito/                abertura, capítulos, agradecimentos, autora
+  manuscrito/                abertura, capítulos, agradecimentos, autoria, última palavra
   artes/                     capa e ilustrações próprias ou licenciadas
   feedback/                  retorno de leitoras e decisões
   dist/                      gerado; não versionar nem publicar inteiro

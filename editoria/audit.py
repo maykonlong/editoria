@@ -106,7 +106,7 @@ def audit(project: Project) -> list[Issue]:
     else:
         add("warning", "SEM_CAPA", "livro.json", "Adicione uma capa antes de gerar o pacote KDP.")
 
-    for source_name in ("ABERTURA.md", "AGRADECIMENTOS.md", "SOBRE_AUTORIA.md"):
+    for source_name in ("ABERTURA.md", "AGRADECIMENTOS.md", "SOBRE_AUTORIA.md", "ULTIMA_PALAVRA.md"):
         source = project.source(source_name)
         if re.search(r"\[PREENCHER[^\]]*\]|\b(?:TODO|TBD|FIXME)\b", source, re.I):
             add("error", "RASCUNHO", f"manuscrito/{source_name}", "Há marcador de rascunho no texto de abertura/fecho.")

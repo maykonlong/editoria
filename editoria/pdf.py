@@ -77,6 +77,7 @@ def _styles() -> dict[str, ParagraphStyle]:
     ink = colors.HexColor("#26231e")
     return {
         "body": ParagraphStyle("Body", fontName=normal, fontSize=10.5, leading=15.3, textColor=ink, alignment=TA_JUSTIFY, firstLineIndent=12, spaceAfter=5),
+        "back_body": ParagraphStyle("BackBody", fontName=normal, fontSize=10.5, leading=15.3, textColor=ink, alignment=TA_LEFT, firstLineIndent=0, spaceAfter=10),
         "dialogue": ParagraphStyle("Dialogue", fontName=normal, fontSize=10.5, leading=15.3, textColor=ink, alignment=TA_LEFT, spaceAfter=5),
         "title": ParagraphStyle("Title", fontName=bold, fontSize=24, leading=29, alignment=TA_CENTER, textColor=colors.HexColor("#20332c"), spaceAfter=18),
         "subtitle": ParagraphStyle("Subtitle", fontName=italic, fontSize=12, leading=17, alignment=TA_CENTER, textColor=ink, spaceAfter=20),
@@ -155,12 +156,20 @@ def build_pdf(project: Project, destination: Path) -> tuple[Path, int]:
         story.extend(_flowables(chapter.body, styles))
         story.append(PageBreak())
 
+    back_styles = {**styles, "body": styles["back_body"]}
+    back_present = False
     for name in ("AGRADECIMENTOS.md", "SOBRE_AUTORIA.md"):
         source = project.source(name)
         if source.strip():
-            story.extend(_flowables(source, styles))
+            story.extend(_flowables(source, back_styles))
+            back_present = True
             if name == "AGRADECIMENTOS.md" and project.source("SOBRE_AUTORIA.md").strip():
                 story.append(Spacer(1, 12))
+    last_word = project.source("ULTIMA_PALAVRA.md")
+    if last_word.strip():
+        if back_present:
+            story.append(PageBreak())
+        story.extend(_flowables(last_word, back_styles))
     if isinstance(story[-1], PageBreak):
         story.pop()
     doc.multiBuild(story)

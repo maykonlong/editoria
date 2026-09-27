@@ -25,3 +25,11 @@ Use os prompts em ordem. Entregue à IA apenas os capítulos necessários e a b�
 ## 6. Segunda checagem após editar
 
 > Releia cada trecho alterado com o parágrafo anterior e o seguinte, depois o fim do capítulo anterior e o começo do posterior. Refaça o mapa de fatos afetados. Relate o que foi resolvido, o que permanece subjetivo e qualquer nova contradição criada pela edição. Não use “100% sem erros”.
+
+## 7. Abertura, encerramento e indicação
+
+> Leia capa, carta/abertura, última cena, agradecimentos e convite final como uma sequência. A carta desperta vontade de entrar na história sem explicar o final? O encerramento deixa a emoção respirar antes de pedir avaliação ou indicação? Se houver convite para compartilhar com quem viveu algo parecido, ele soa cuidadoso e não julga a pessoa indicada? Sugira ajustes de tom com trechos concretos, sem impor tamanho mínimo ou máximo.
+
+## 8. Leitor público e PWA
+
+> Confira a experiência como leitora nova e como leitora que volta: começar deve abrir pela capa e abertura; continuar deve recuperar capítulo e trecho. Em celular, tablet e tela monocromática, observe legibilidade, botões e artes. Inspecione a saída pública e o cache do service worker: não deve haver capítulos além da prévia autorizada nem texto integral offline. Registre limitações por navegador e não chame teste local de garantia universal de instalação.

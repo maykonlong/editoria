@@ -13,8 +13,8 @@ Cada rodada deve indicar **capítulo, trecho, risco, proposta e efeito colateral
 9. **Arco emocional.** A pessoa muda por atos e custos, não apenas por frases de terapia, diário ou narração. Não transforme parceiro em prêmio ou vilão sem base.
 10. **Linguagem e concordância.** Prefira palavras comuns e frases claras sem apagar a voz. Diálogos precisam soar como gente, não como resumo da tese do livro.
 11. **Final e série.** Este volume fecha seu conflito principal. Um fio para o próximo desperta curiosidade sem negar a escolha final nem exigir o segundo livro para fazer sentido.
-12. **Arte e objeto-livro.** Arte tem função, posição, legenda/alt quando cabível, direitos e coerência com a cena? Sumário, abertura, agradecimentos e autoria estão consistentes?
-13. **Publicação e acesso.** Site, SEO/dados estruturados, prévia, metadados, EPUB, PDF, capa, links e política de exclusividade contam a mesma verdade? Separe o que é público do que é pacote privado.
+12. **Arte e objeto-livro.** Arte tem função, posição, legenda/alt quando cabível, direitos e coerência com a cena? Sumário, capa, carta de abertura, agradecimentos, autoria e última palavra estão consistentes? O convite para indicar/avaliar fica fora da cena final?
+13. **Publicação e acesso.** Site, SEO/dados estruturados, leitor instalável, prévia, metadados, EPUB, PDF, capa, links e política de exclusividade contam a mesma verdade? O botão “começar” abre a capa; “continuar” retoma o ponto salvo? Separe o que é público do que é pacote privado.
 
 ## Ordem recomendada
 

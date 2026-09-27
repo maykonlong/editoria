@@ -22,7 +22,7 @@ def counts(project: Project) -> dict:
     per_chapter = [{"capitulo": chapter.number, "titulo": chapter.title, "palavras": word_count(chapter.body)} for chapter in project.chapters]
     story_words = sum(item["palavras"] for item in per_chapter)
     front_words = word_count(project.source("ABERTURA.md"))
-    back_words = sum(word_count(project.source(name)) for name in ("AGRADECIMENTOS.md", "SOBRE_AUTORIA.md"))
+    back_words = sum(word_count(project.source(name)) for name in ("AGRADECIMENTOS.md", "SOBRE_AUTORIA.md", "ULTIMA_PALAVRA.md"))
     return {"capitulos": len(project.chapters), "palavras_historia": story_words, "palavras_abertura": front_words, "palavras_fechamento": back_words, "palavras_texto_total": story_words + front_words + back_words, "por_capitulo": per_chapter}
 
 
@@ -34,7 +34,7 @@ def compiled_manuscript(project: Project) -> str:
             parts.append(source)
     for chapter in project.chapters:
         parts.append(chapter.path.read_text(encoding="utf-8-sig").strip())
-    for name in ("AGRADECIMENTOS.md", "SOBRE_AUTORIA.md"):
+    for name in ("AGRADECIMENTOS.md", "SOBRE_AUTORIA.md", "ULTIMA_PALAVRA.md"):
         source = project.source(name).strip()
         if source:
             parts.append(source)

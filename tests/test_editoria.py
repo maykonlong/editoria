@@ -54,6 +54,7 @@ class EditorialProjectTests(unittest.TestCase):
         (self.root / "manuscrito" / "ABERTURA.md").write_text("# Abertura\n\n## Dedicatória\n\nÀs leitoras que recomeçam.\n", encoding="utf-8")
         (self.root / "manuscrito" / "AGRADECIMENTOS.md").write_text("# Agradecimentos\n\nÀ equipe de leitura.\n", encoding="utf-8")
         (self.root / "manuscrito" / "SOBRE_AUTORIA.md").write_text("# Sobre a autoria\n\nNome Literário escreve ficção.\n", encoding="utf-8")
+        (self.root / "manuscrito" / "ULTIMA_PALAVRA.md").write_text("# Uma última palavra\n\nSe esta história fez você lembrar de alguém, indique o livro. Se gostou, deixe uma avaliação sincera.\n", encoding="utf-8")
         (self.root / "manuscrito" / "CAP_01_PRIMEIRO_CAPITULO.md").write_text(
             "# CAPÍTULO 1\n## A Chave\n\nAna encontrou uma chave na mesa.\n\n— Você sabe de quem é?\n\n— Ainda não.\n\n---\n\nEla abriu a porta e viu a casa vazia.\n",
             encoding="utf-8",
@@ -77,12 +78,17 @@ class EditorialProjectTests(unittest.TestCase):
         self.assertTrue((self.root / "dist" / "publico" / "capitulos" / "capitulo-01.html").is_file())
         self.assertFalse((self.root / "dist" / "publico" / "capitulos" / "capitulo-02.html").exists())
         self.assertFalse((self.root / "dist" / "publico" / "manuscrito_integral.md").exists())
+        self.assertFalse((self.root / "dist" / "publico" / "ultima-palavra.html").exists())
         self.assertTrue((self.root / "dist" / "publico" / "sitemap.xml").is_file())
+        self.assertTrue((self.root / "dist" / "publico" / "manifest.webmanifest").is_file())
+        self.assertTrue((self.root / "dist" / "publico" / "sw.js").is_file())
         epub = self.root / "dist" / "kdp" / "uma-casa-nova.epub"
         with zipfile.ZipFile(epub) as archive:
             self.assertEqual(archive.namelist()[0], "mimetype")
             self.assertIn("OEBPS/nav.xhtml", archive.namelist())
             self.assertIn("OEBPS/chapters/chapter-002.xhtml", archive.namelist())
+            self.assertIn("OEBPS/final-note.xhtml", archive.namelist())
+            self.assertIn("Uma última palavra", archive.read("OEBPS/nav.xhtml").decode("utf-8"))
         self.assertTrue((self.root / "dist" / "kdp" / "materiais-publicacao.zip").is_file())
 
     def test_public_full_requires_explicit_choice(self) -> None:
@@ -95,6 +101,8 @@ class EditorialProjectTests(unittest.TestCase):
         report = generate(load_project(self.root), only="publico", allow_full=True)
         self.assertIn("publico", report["saidas"])
         self.assertTrue((self.root / "dist" / "publico" / "capitulos" / "capitulo-02.html").is_file())
+        self.assertTrue((self.root / "dist" / "publico" / "pos-texto.html").is_file())
+        self.assertTrue((self.root / "dist" / "publico" / "ultima-palavra.html").is_file())
 
     def test_public_mode_switch_removes_old_chapters(self) -> None:
         generate(load_project(self.root), only="publico")
@@ -105,6 +113,9 @@ class EditorialProjectTests(unittest.TestCase):
         config_file.write_text(json.dumps(config, ensure_ascii=False), encoding="utf-8")
         generate(load_project(self.root), only="publico")
         self.assertFalse((self.root / "dist" / "publico" / "capitulos").exists())
+        self.assertFalse((self.root / "dist" / "publico" / "manifest.webmanifest").exists())
+        self.assertFalse((self.root / "dist" / "publico" / "sw.js").exists())
+        self.assertIn('data-retire-pwa="true"', (self.root / "dist" / "publico" / "index.html").read_text(encoding="utf-8"))
 
     def test_all_generated_local_links_exist(self) -> None:
         generate(load_project(self.root), only="tudo")
@@ -137,7 +148,43 @@ class EditorialProjectTests(unittest.TestCase):
         generate(load_project(self.root), only="publico")
         public = self.root / "dist" / "publico"
         self.assertFalse((public / "ler.html").exists())
+        self.assertFalse((public / "manifest.webmanifest").exists())
+        self.assertFalse((public / "sw.js").exists())
         self.assertNotIn('href="ler.html"', (public / "index.html").read_text(encoding="utf-8"))
+
+    def test_reader_opens_before_chapter_and_resumes_without_offline_book(self) -> None:
+        generate(load_project(self.root), only="publico")
+        public = self.root / "dist" / "publico"
+        manifest = json.loads((public / "manifest.webmanifest").read_text(encoding="utf-8"))
+        self.assertEqual(manifest["start_url"], "./ler.html?retomar=1")
+        self.assertEqual({icon["sizes"] for icon in manifest["icons"]}, {"192x192", "512x512"})
+        for icon in manifest["icons"]:
+            with Image.open(public / icon["src"]) as image:
+                self.assertEqual(f"{image.width}x{image.height}", icon["sizes"])
+        shell = (public / "sw.js").read_text(encoding="utf-8")
+        self.assertNotIn("capitulo-01.html", shell)
+        self.assertNotIn(".md", shell)
+        self.assertNotIn(".epub", shell)
+        self.assertNotIn(".pdf", shell)
+        reader = (public / "ler.html").read_text(encoding="utf-8")
+        self.assertIn('alt="Capa de Uma Casa Nova"', reader)
+        self.assertIn("Às leitoras que recomeçam.", reader)
+        self.assertLess(reader.index("Às leitoras que recomeçam."), reader.index("Índice"))
+        self.assertIn("Continuar de onde parei", reader)
+        chapter = (public / "capitulos" / "capitulo-01.html").read_text(encoding="utf-8")
+        self.assertIn('data-chapter="1"', chapter)
+        self.assertIn('src="../reader.js"', chapter)
+        script = (public / "reader.js").read_text(encoding="utf-8")
+        self.assertIn("pagehide", script)
+        self.assertIn("scrollTo", script)
+
+    def test_final_note_is_separate_from_acknowledgments(self) -> None:
+        report = generate(load_project(self.root), only="kdp")
+        self.assertGreater(report["palavras_fechamento"], 0)
+        pdf = PdfReader(str(self.root / "dist" / "kdp" / "miolo-5.5x8.5.pdf"))
+        last_text = "\n".join(page.extract_text() or "" for page in pdf.pages[-2:])
+        self.assertIn("Uma última palavra", last_text)
+        self.assertIn("avaliação sincera", last_text)
 
     def test_markdown_preserves_dialogue_and_escapes_html(self) -> None:
         source = "Uma cena.\n— Fala um.\n— Fala dois.\n\nTexto com <tag> e **negrito**."

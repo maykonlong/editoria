@@ -14,6 +14,8 @@ Preencha `site.url` com a URL final, com barra final, por exemplo `https://seuus
 
 Rode `editoria gerar . --somente publico` e confira `dist/publico/index.html`, `ler.html` (se houver prévia), cada página de capítulo e o último link da prévia em celular, tablet e leitor com navegador. O comando **recria** essa pasta, removendo capítulos de uma configuração pública anterior. Confira o conteúdo antes de enviar.
 
+Em `preview` ou `full` autorizado, o site também gera um [leitor instalável](LEITOR_PWA.md): o ícone abre o início ou retoma o ponto salvo no mesmo aparelho. O app guarda apenas a estrutura, **não o livro offline**. Em `landing`, não há manifesto nem service worker de leitura. Teste a instalação e a retomada num aparelho real antes de anunciá-las.
+
 ## Publicação por GitHub Actions
 
 O arquivo [`exemplos/pages.yml`](../exemplos/pages.yml) é um modelo para o **repositório do livro**, não para este repositório da ferramenta. Copie-o para `.github/workflows/pages.yml` do livro, ajuste a versão da ferramenta e selecione **Settings → Pages → Build and deployment → Source: GitHub Actions**. O fluxo constrói somente `dist/publico/` e usa o artefato de Pages; não envia `dist/kdp/`.

@@ -101,6 +101,13 @@ def build_epub(project: Project, destination: Path) -> Path:
             spine.append(f'<itemref idref="{section_id}"/>')
             entries.append((section_id, href, title))
 
+    final_note = project.source("ULTIMA_PALAVRA.md")
+    if final_note.strip():
+        contents["OEBPS/final-note.xhtml"] = _xhtml("Uma última palavra", f'<section class="last-word">{render_html(final_note)}</section>').encode("utf-8")
+        manifest.append('<item id="final-note" href="final-note.xhtml" media-type="application/xhtml+xml"/>')
+        spine.append('<itemref idref="final-note"/>')
+        entries.append(("final-note", "final-note.xhtml", "Uma última palavra"))
+
     nav_items = "".join(f'<li><a href="{html.escape(href, quote=True)}">{html.escape(title)}</a></li>' for _, href, title in entries)
     contents["OEBPS/nav.xhtml"] = _xhtml("Sumário", f'<nav epub:type="toc" id="toc"><h1>Sumário</h1><ol>{nav_items}</ol></nav>', nav=True).encode("utf-8")
     identifier = "urn:uuid:" + str(uuid.uuid5(uuid.NAMESPACE_URL, str(project.config.get("id", project.title))))

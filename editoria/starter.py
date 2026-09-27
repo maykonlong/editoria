@@ -126,6 +126,10 @@ Não inclua relatos reais identificáveis de clientes/leitoras sem tratar privac
 
 [PREENCHER antes da publicação. Pseudônimo não deve receber biografia inventada apresentada como fato.]
 """,
+        "manuscrito/ULTIMA_PALAVRA.md": """# Uma última palavra
+
+[PREENCHER ou remova este arquivo: convide com cuidado à indicação e a uma avaliação sincera. Não interrompa a última cena para pedir isso.]
+""",
         "feedback/LEITORAS_BETA.md": """# Leitura beta
 
 Registre versão/commit entregue e data. Para cada leitora, pergunte:

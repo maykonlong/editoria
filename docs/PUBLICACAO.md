@@ -10,12 +10,15 @@ Este é um checklist editorial, não aconselhamento jurídico nem garantia de ac
 4. Confira o EPUB num leitor Kindle/Previewer e o PDF no Previewer do impresso. Peça uma prova física antes de aprovar a capa completa.
 5. Confira os requisitos atuais de ficha catalográfica, ISBN, depósito legal, direitos autorais e metadados para o país e formato escolhidos. Documente a fonte e a data dessa conferência.
 6. Coloque links reais de compra no site somente depois que existirem. Não prometa leitura grátis, formato, preço ou disponibilidade que ainda não estejam ativos.
+7. Leia capa, dedicatória/carta e encerramento em cada formato. A abertura deve convidar, não entregar a conclusão; o convite para avaliar e indicar pode ficar em uma última página, sem misturar marketing com a cena final.
 
 ## Site e exclusividade digital
 
 O modo padrão é `landing`: só apresentação, sem capítulos. `preview` exporta apenas a quantidade configurada e nunca deve ser ativado sem uma decisão comercial. `full` requer a opção explícita `--permitir-publico-completo` na geração; não é recomendado para um lançamento ainda indefinido.
 
 Se você cogita um programa com exclusividade digital, **confira as regras oficiais atuais antes de hospedar ou vender o texto digital em outro lugar**. O código não presume que uma porcentagem, um número de capítulos ou um prazo seja sempre permitido. Apagar a página visível pode não remover cópias do Git, arquivos de download ou caches. Nesses casos, consulte a plataforma antes da inscrição.
+
+O [PWA do leitor](LEITOR_PWA.md) não guarda capítulos offline, mas isso **não torna permitida** a publicação de um texto que já está disponível online. O modo de site e o conteúdo versionado continuam determinando o que foi distribuído.
 
 ## Pacote impresso
 
