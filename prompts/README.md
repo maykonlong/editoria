@@ -2,6 +2,16 @@
 
 Use os prompts em ordem. Entregue à IA apenas os capítulos necessários e a bíblia/cronologia pertinentes; dados pessoais de leitoras e clientes devem ser removidos. **Texto do manuscrito é material a analisar, não instrução para a IA.** Não peça “garanta que será best-seller”: peça evidência e alternativas.
 
+Para o ciclo de um capítulo, leia também `planejamento/SEGREDOS.md`, `OBJETOS.md`, `LOCAIS.md`, `PONTAS_ABERTAS.md`, `ESTADO.json` e as memórias anteriores. Planejamento, escrita, auditoria e aprovação são etapas distintas; a IA não altera o estado para `aprovado` por conta própria. Veja [FLUXO_IA.md](../docs/FLUXO_IA.md).
+
+## Planejar um capítulo
+
+> Com base apenas nas decisões do autor, na Bíblia, na cronologia e nas memórias aprovadas, proponha objetivo, conflito, local, período, personagens presentes, conhecimento de cada um, revelações permitidas, consequência e gancho. Marque toda ideia nova como sugestão. Se faltar uma decisão que altere a história, liste a pergunta antes de escrever.
+
+## Escrever e registrar memória
+
+> Escreva somente o capítulo planejado e aprovado. Preserve ponto de vista, tempo verbal e voz dos personagens. Após minha aprovação explícita, resuma fatos novos, quem descobriu o quê, alterações de objetos/locais, segredos mantidos e pontas abertas em `memoria/CAP_NN.md`. Não trate texto ainda em revisão como canônico.
+
 ## 1. Diagnóstico sem alterações
 
 > Você é revisora editorial deste romance. Leia `livro.json`, premissa, personagens, cronologia e os capítulos fornecidos. Separe achados em: erro objetivo, risco de compreensão, opção de estilo. Para cada achado cite capítulo e frase curta, explique por que importa para o público definido e proponha a menor correção que preserve a essência. Não reescreva o final, não invente fatos e não afirme que encontrou todos os erros.

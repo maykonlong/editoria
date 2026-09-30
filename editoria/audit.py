@@ -8,6 +8,7 @@ from dataclasses import asdict, dataclass
 from .lexicon import SUGGESTIONS
 from .markdown import word_count
 from .project import Project, safe_relative_file
+from .workflow import status_report
 
 
 @dataclass(frozen=True)
@@ -121,6 +122,16 @@ def audit(project: Project) -> list[Issue]:
         count = site.get("capitulos_gratis", 0)
         if not isinstance(count, int) or not 1 <= count <= len(project.chapters):
             add("error", "PREVIA", "livro.json", "Defina site.capitulos_gratis entre 1 e o total de capítulos.")
+
+    try:
+        status = status_report(project)
+    except ValueError as exc:
+        add("error", "ESTADO_INVALIDO", "planejamento/ESTADO.json", str(exc))
+    else:
+        for number in status["estado_sem_manuscrito"]:
+            add("error", "APROVADO_SEM_TEXTO", "planejamento/ESTADO.json", f"Capítulo {number} está aprovado, mas não há manuscrito.")
+        for number in status["memorias_pendentes"]:
+            add("warning", "MEMORIA_PENDENTE", f"memoria/CAP_{number:02d}.md", f"Registre a memória do capítulo {number} aprovado.")
 
     return issues
 

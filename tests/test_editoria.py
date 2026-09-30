@@ -5,6 +5,7 @@ import io
 import tempfile
 import unittest
 import zipfile
+from contextlib import redirect_stdout
 from html.parser import HTMLParser
 from pathlib import Path
 from urllib.parse import urlsplit
@@ -14,11 +15,13 @@ from PIL import Image
 from pypdf import PdfReader
 
 from editoria.audit import audit, has_errors
+from editoria.cli import main
 from editoria.grammar import check_local_grammar
 from editoria.markdown import blocks, render_html
 from editoria.project import load_project
 from editoria.publication import generate
 from editoria.starter import init_project
+from editoria.workflow import status_report
 
 
 class LocalLinks(HTMLParser):
@@ -201,6 +204,48 @@ class EditorialProjectTests(unittest.TestCase):
         self.assertTrue(has_errors(issues))
         self.assertIn("SEQUENCIA", {issue.code for issue in issues})
         self.assertIn("RASCUNHO", {issue.code for issue in issues})
+
+    def test_new_project_has_editorial_memory_templates(self) -> None:
+        for relative in (
+            "planejamento/BIBLIA.md", "planejamento/SEGREDOS.md",
+            "planejamento/OBJETOS.md", "planejamento/LOCAIS.md",
+            "planejamento/PONTAS_ABERTAS.md", "planejamento/ESTADO.json",
+            "memoria/CAP_01.md", "auditorias/README.md",
+        ):
+            self.assertTrue((self.root / relative).is_file(), relative)
+        state = json.loads((self.root / "planejamento" / "ESTADO.json").read_text(encoding="utf-8"))
+        self.assertEqual(state["capitulos"]["01"], "rascunho")
+
+    def test_status_distinguishes_written_approved_and_pending_decisions(self) -> None:
+        state_file = self.root / "planejamento" / "ESTADO.json"
+        state = json.loads(state_file.read_text(encoding="utf-8"))
+        state["capitulos"] = {"01": "aprovado", "02": "rascunho", "03": "planejado"}
+        state["decisoes_pendentes"] = ["Definir motivação de Ana"]
+        state_file.write_text(json.dumps(state, ensure_ascii=False), encoding="utf-8")
+        report = status_report(load_project(self.root))
+        self.assertEqual(report["capitulos_escritos"], 2)
+        self.assertEqual(report["capitulos_aprovados"], 1)
+        self.assertEqual(report["capitulos_planejados"], 3)
+        self.assertEqual(report["decisoes_pendentes"], ["Definir motivação de Ana"])
+        self.assertEqual(report["memorias_pendentes"], [1])
+        self.assertIn("MEMORIA_PENDENTE", {issue.code for issue in audit(load_project(self.root))})
+        (self.root / "memoria" / "CAP_01.md").write_text("# Memória do capítulo 1\n\nAna encontrou a chave.\n", encoding="utf-8")
+        self.assertEqual(status_report(load_project(self.root))["memorias_pendentes"], [])
+
+    def test_status_works_for_older_project_without_editorial_state(self) -> None:
+        (self.root / "planejamento" / "ESTADO.json").unlink()
+        report = status_report(load_project(self.root))
+        self.assertEqual(report["capitulos_escritos"], 2)
+        self.assertEqual(report["capitulos_aprovados"], 0)
+        self.assertEqual(report["capitulos_sem_estado"], [1, 2])
+
+    def test_status_command_and_invalid_editorial_state(self) -> None:
+        output = io.StringIO()
+        with redirect_stdout(output):
+            self.assertEqual(main(["status", str(self.root), "--json"]), 0)
+        self.assertEqual(json.loads(output.getvalue())["capitulos_escritos"], 2)
+        (self.root / "planejamento" / "ESTADO.json").write_text('{"capitulos": {"01": "aprovado-sem-autor"}}', encoding="utf-8")
+        self.assertIn("ESTADO_INVALIDO", {issue.code for issue in audit(load_project(self.root))})
 
 
 if __name__ == "__main__":

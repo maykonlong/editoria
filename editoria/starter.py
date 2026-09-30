@@ -22,7 +22,7 @@ def init_project(destination: str | Path, title: str, author: str) -> Path:
     else:
         root.mkdir(parents=True)
 
-    for directory in ("planejamento", "manuscrito", "artes", "feedback"):
+    for directory in ("planejamento", "manuscrito", "memoria", "auditorias", "artes", "feedback"):
         (root / directory).mkdir(exist_ok=True)
 
     config = {
@@ -49,6 +49,9 @@ def init_project(destination: str | Path, title: str, author: str) -> Path:
         "AGENTS.md": """# Instruções editoriais deste livro
 
 - Leia `livro.json` e `planejamento/` antes de alterar a história.
+- Respeite a hierarquia: decisão explícita do autor, Bíblia, capítulos aprovados, cronologia, personagens, planejamento e sugestões da IA. Uma sugestão não é cânone.
+- Confira `memoria/` antes de escrever. Segredos e eventos planejados não podem ser revelados antes do momento aprovado.
+- Somente o autor marca um capítulo como `aprovado` em `planejamento/ESTADO.json`; após isso, registre a memória do capítulo.
 - `manuscrito/` é a fonte; `dist/` é gerado. Nunca edite a saída gerada à mão.
 - Preserve a voz, o público, os fatos canônicos e o fim planejado. Mudança grande de arco exige decisão do autor.
 - Mostre uma questão narrativa com capítulo e trecho; separe erro objetivo de preferência de leitura.
@@ -65,6 +68,28 @@ def init_project(destination: str | Path, title: str, author: str) -> Path:
 - Conflito externo e custo da escolha: [PREENCHER]
 - Final deste volume: [PREENCHER]
 - Pergunta legítima que pode levar ao próximo volume: [PREENCHER ou não se aplica]
+""",
+        "planejamento/BIBLIA.md": """# Bíblia do livro
+
+Fonte de verdade para identidade, universo e limites da obra. Registre apenas decisões aprovadas pelo autor; ideias abertas ficam em `PONTAS_ABERTAS.md` ou `ESTADO.json`.
+
+## Identidade
+
+- Gênero e subgênero: [PREENCHER]
+- Público e tema: [PREENCHER]
+- Narrador, ponto de vista e tempo verbal: [PREENCHER]
+- Tom e regras de estilo: [PREENCHER]
+
+## Universo
+
+- Época e lugares centrais: [PREENCHER]
+- Regras que não podem mudar: [PREENCHER]
+- Limites de pesquisa factual: [PREENCHER]
+
+## Estrutura
+
+- Início, viradas, clímax e resolução: [PREENCHER]
+- Elementos que devem ser evitados: [PREENCHER]
 """,
         "planejamento/PERSONAGENS.md": """# Bíblia de personagens
 
@@ -92,6 +117,39 @@ Registre aniversários, feriados, intervalo entre cenas, mudança de moradia, tr
 | 1 | [PREENCHER] | [PREENCHER] | [PREENCHER] | [PREENCHER] |
 
 Nem todo fim precisa de suspense. Uma escolha, uma consequência ou uma pergunta emocional concreta costuma bastar.
+""",
+        "planejamento/SEGREDOS.md": """# Segredos e revelações
+
+| ID | Informação | Quem sabe | Quem ainda não sabe | Revelação ao leitor | Revelação aos personagens | Pistas aprovadas |
+| --- | --- | --- | --- | --- | --- | --- |
+| [PREENCHER] | [PREENCHER] | [PREENCHER] | [PREENCHER] | [PREENCHER] | [PREENCHER] | [PREENCHER] |
+
+Separe fato confirmado, evento planejado e hipótese. Não antecipe uma revelação por inferência da IA.
+""",
+        "planejamento/OBJETOS.md": """# Objetos importantes
+
+| Objeto | Origem | Proprietário/portador | Local atual | Primeira aparição | Mudanças registradas |
+| --- | --- | --- | --- | --- | --- |
+| [PREENCHER] | [PREENCHER] | [PREENCHER] | [PREENCHER] | [PREENCHER] | [PREENCHER] |
+""",
+        "planejamento/LOCAIS.md": """# Locais importantes
+
+| Local | Características e regras | Distâncias/tempo | Eventos ocorridos | Mudanças aprovadas |
+| --- | --- | --- | --- | --- |
+| [PREENCHER] | [PREENCHER] | [PREENCHER] | [PREENCHER] | [PREENCHER] |
+""",
+        "planejamento/PONTAS_ABERTAS.md": """# Pontas abertas e hipóteses
+
+| ID | Questão | Onde surgiu | Estado (confirmada/planejada/desconhecida/descartada) | Decisão do autor | Capítulo de resolução |
+| --- | --- | --- | --- | --- | --- |
+| [PREENCHER] | [PREENCHER] | [PREENCHER] | desconhecida | [PREENCHER] | [PREENCHER] |
+
+Uma hipótese da IA não deve virar fato canônico sem aprovação do autor.
+""",
+        "planejamento/ESTADO.json": """{
+  "capitulos": {"01": "rascunho"},
+  "decisoes_pendentes": []
+}
 """,
         "planejamento/DIREITOS.md": """# Direitos, fontes e privacidade
 
@@ -129,6 +187,22 @@ Não inclua relatos reais identificáveis de clientes/leitoras sem tratar privac
         "manuscrito/ULTIMA_PALAVRA.md": """# Uma última palavra
 
 [PREENCHER ou remova este arquivo: convide com cuidado à indicação e a uma avaliação sincera. Não interrompa a última cena para pedir isso.]
+""",
+        "memoria/CAP_01.md": """# Memória do capítulo 1
+
+Preencha após a aprovação do capítulo. Registre apenas fatos estabelecidos, com referências ao manuscrito.
+
+- Eventos e consequências: [PREENCHER]
+- Novos fatos de personagens, locais e objetos: [PREENCHER]
+- Revelações e quem passou a saber: [PREENCHER]
+- Segredos preservados e pontas abertas: [PREENCHER]
+- Alterações na cronologia: [PREENCHER]
+""",
+        "auditorias/README.md": """# Auditorias do livro
+
+Registre achados com capítulo, trecho, evidência, gravidade, proposta, impacto e decisão do autor. Não corrija silenciosamente contradições que mudem arco, personagem, segredo ou final.
+
+Sugestão: revisão de continuidade a cada cinco capítulos aprovados e revisão ampla a cada dez. Consulte `docs/FLUXO_IA.md` na ferramenta Editoria.
 """,
         "feedback/LEITORAS_BETA.md": """# Leitura beta
 

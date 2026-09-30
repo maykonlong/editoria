@@ -19,6 +19,7 @@ O primeiro comando cria um projeto separado. Preencha `livro.json`, `planejament
 
 ```bash
 editoria verificar meu-romance --json
+editoria status meu-romance --json
 editoria gerar meu-romance --somente leitura
 editoria gerar meu-romance --somente tudo
 ```
@@ -41,6 +42,8 @@ Para colocar a apresentação ou a prévia no GitHub Pages, siga [GITHUB_PAGES.m
 
 Os [13 roteiros de revisão](docs/REVISAO.md) e os [prompts para IA](prompts/README.md) são independentes do gênero. A ferramenta **não garante best-seller, ausência absoluta de erros, elegibilidade no KDP ou qualidade literária**. Ela deixa os pontos verificáveis explícitos e registra o que precisa de julgamento humano.
 
+Para projetos longos escritos com IA, use o [fluxo de memória e aprovação](docs/FLUXO_IA.md). O novo projeto inclui Bíblia, segredos, objetos, locais, pontas abertas, memória por capítulo e `planejamento/ESTADO.json`. `editoria status` mostra progresso e decisões pendentes sem considerar sugestões da IA como fatos aprovados. Projetos criados antes desse fluxo continuam funcionando.
+
 As [métricas editoriais](docs/METRICAS.md) explicam exatamente o que as contagens incluem e como usá-las sem forçar capítulos a um tamanho artificial.
 
 ## Estrutura de um livro
@@ -49,6 +52,8 @@ As [métricas editoriais](docs/METRICAS.md) explicam exatamente o que as contage
 meu-romance/
   livro.json                 metadados, público, site e artes
   planejamento/              premissa, personagens, cronologia, mapa
+  memoria/                   resumo de fatos de cada capítulo aprovado
+  auditorias/                registros de continuidade e estilo
   manuscrito/                abertura, capítulos, agradecimentos, autoria, última palavra
   artes/                     capa e ilustrações próprias ou licenciadas
   feedback/                  retorno de leitoras e decisões

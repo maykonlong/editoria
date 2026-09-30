@@ -11,6 +11,7 @@ from .grammar import check_local_grammar
 from .project import load_project
 from .publication import counts, generate
 from .starter import init_project
+from .workflow import status_report
 
 
 def parser() -> argparse.ArgumentParser:
@@ -25,6 +26,10 @@ def parser() -> argparse.ArgumentParser:
     verify.add_argument("projeto")
     verify.add_argument("--json", action="store_true", help="relatório legível por máquina")
     verify.add_argument("--languagetool-url", help="opcional: servidor gramatical local, por exemplo http://127.0.0.1:8081/v2/check")
+
+    status = commands.add_parser("status", help="mostra progresso, aprovações e memórias pendentes")
+    status.add_argument("projeto")
+    status.add_argument("--json", action="store_true", help="relatório legível por máquina")
 
     build = commands.add_parser("gerar", help="gera leitura, site e/ou materiais de publicação")
     build.add_argument("projeto")
@@ -41,6 +46,20 @@ def main(argv: list[str] | None = None) -> int:
             print(f"Projeto criado: {created}\nPreencha livro.json e manuscrito/ antes de gerar.")
             return 0
         project = load_project(args.projeto)
+        if args.comando == "status":
+            report = status_report(project)
+            if args.json:
+                print(json.dumps(report, ensure_ascii=False, indent=2))
+            else:
+                print(f"{report['titulo']}: {report['capitulos_escritos']} escritos, {report['capitulos_aprovados']} aprovados, {report['capitulos_planejados']} no planejamento.")
+                print(f"Sem estado: {report['capitulos_sem_estado']}; memórias pendentes: {report['memorias_pendentes']}.")
+                if report["estado_sem_manuscrito"]:
+                    print(f"Aprovados sem manuscrito: {report['estado_sem_manuscrito']}.")
+                if report["decisoes_pendentes"]:
+                    print("Decisões pendentes:")
+                    for decision in report["decisoes_pendentes"]:
+                        print(f"- {decision}")
+            return 0
         if args.comando == "verificar":
             issues = audit(project)
             if args.languagetool_url:
